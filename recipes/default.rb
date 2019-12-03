@@ -26,16 +26,16 @@ install_path = '/usr/local/bin/scponly'
 
 remote_file src_path do
   source node['scponly']['src']
-  not_if { ::File.exists?(src_path) }
+  not_if { ::File.exist?(src_path) }
 end
 
 bash 'extract scponly' do
   user 'root'
   cwd node['scponly']['dir']
   code "tar -zxvf #{node['scponly']['srcfilename']}.tgz"
-  not_if { ::File.exists?(extract_path) }
+  not_if { ::File.exist?(extract_path) }
 end
- 
+
 bash 'build and install scponly' do
   user 'root'
   cwd "#{node['scponly']['dir']}#{node['scponly']['srcfilename']}"
@@ -44,7 +44,7 @@ bash 'build and install scponly' do
     make
     make install
   EOH
-  not_if { ::File.exists?(install_path) }
+  not_if { ::File.exist?(install_path) }
 end
 
 %w(/usr/local/bin/scponly /usr/local/sbin/scponlyc).each do |l|
@@ -63,13 +63,13 @@ directory node['scponly']['uploaddir'] do
   recursive true
 end
 
-# TODO testing, will remove once custom resource is hashed out
+# TODO: testing, will remove once custom resource is hashed out
 node['scponly']['users'].each do |u|
-  user u do 
+  user u do
     gid 'scponly'
     home "/home/#{u}"
     manage_home true
-    shell "/usr/local/bin/scponlyc"
+    shell '/usr/local/bin/scponlyc'
   end
   group u do
     members u
