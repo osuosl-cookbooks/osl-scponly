@@ -10,3 +10,5 @@ long_description 'Installs/Configures osl-scponly'
 version          '0.1.0'
 
 supports         'centos', '~> 7.0'
+
+depends          'yum-epel'
