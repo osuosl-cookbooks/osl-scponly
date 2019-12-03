@@ -43,9 +43,15 @@ bash 'build and install scponly' do
     ./configure #{node['scponly']['config']}
     make
     make install
-    /bin/su -c "echo "/usr/local/bin/scponly" >> /etc/shells"
   EOH
   not_if { ::File.exists?(install_path) }
+end
+
+%w(/usr/local/bin/scponly /usr/local/sbin/scponlyc).each do |l|
+  append_if_no_line "Append #{l} shell" do
+    path '/etc/shells'
+    line l
+  end
 end
 
 group 'scponly'
@@ -57,13 +63,28 @@ directory node['scponly']['uploaddir'] do
   recursive true
 end
 
+# TODO testing, will remove once custom resource is hashed out
 node['scponly']['users'].each do |u|
   user u do 
     gid 'scponly'
     home "/home/#{u}"
-    shell "/usr/local/bin/scponly"
+    manage_home true
+    shell "/usr/local/bin/scponlyc"
+  end
+  group u do
+    members u
   end
   directory "/home/#{u}" do
     mode '0500'
+  end
+  directory "/home/#{u}/.ssh" do
+    mode '0500'
+    owner u
+    group u
+  end
+  file "/home/#{u}/.ssh/authorized_keys" do
+    mode '0400'
+    owner u
+    group u
   end
 end
