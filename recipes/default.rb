@@ -16,75 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%w(wget gcc man rsync openssh-clients).each do |p|
-  package p
-end
+include_recipe 'yum-epel'
 
-src_path = "#{node['scponly']['dir']}#{node['scponly']['srcfilename']}.tgz"
-extract_path = "#{node['scponly']['dir']}#{node['scponly']['srcfilename']}"
-install_path = '/usr/local/bin/scponly'
+package 'scponly'
 
-remote_file src_path do
-  source node['scponly']['src']
-  not_if { ::File.exist?(src_path) }
-end
-
-bash 'extract scponly' do
-  user 'root'
-  cwd node['scponly']['dir']
-  code "tar -zxvf #{node['scponly']['srcfilename']}.tgz"
-  not_if { ::File.exist?(extract_path) }
-end
-
-bash 'build and install scponly' do
-  user 'root'
-  cwd "#{node['scponly']['dir']}#{node['scponly']['srcfilename']}"
-  code <<-EOH
-    ./configure #{node['scponly']['config']}
-    make
-    make install
-  EOH
-  not_if { ::File.exist?(install_path) }
-end
-
-%w(/usr/local/bin/scponly /usr/local/sbin/scponlyc).each do |l|
-  append_if_no_line "Append #{l} shell" do
-    path '/etc/shells'
-    line l
-  end
+append_if_no_line 'Add scponlyc shell' do
+  path '/etc/shells'
+  line '/usr/sbin/scponlyc'
 end
 
 group 'scponly'
-
-directory node['scponly']['uploaddir'] do
-  owner 'root'
-  group 'scponly'
-  mode '0770'
-  recursive true
-end
-
-# TODO: testing, will remove once custom resource is hashed out
-node['scponly']['users'].each do |u|
-  user u do
-    gid 'scponly'
-    home "/home/#{u}"
-    manage_home true
-    shell '/usr/local/bin/scponlyc'
-  end
-  group u do
-    members u
-  end
-  directory "/home/#{u}" do
-    mode '0500'
-  end
-  directory "/home/#{u}/.ssh" do
-    mode '0500'
-    owner u
-    group u
-  end
-  file "/home/#{u}/.ssh/authorized_keys" do
-    mode '0400'
-    owner u
-    group u
-  end
-end

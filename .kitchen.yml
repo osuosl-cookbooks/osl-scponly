@@ -6,3 +6,4 @@ suites:
   - name: default
     run_list:
       - recipe[osl-scponly::default]
+      - recipe[scponly-test::default]
