@@ -20,9 +20,13 @@ include_recipe 'yum-epel'
 
 package 'scponly'
 
-append_if_no_line 'Add scponlyc shell' do
-  path '/etc/shells'
-  line '/usr/sbin/scponlyc'
+%w( /usr/bin/scponly /usr/sbin/scponlyc ).each do |s|
+  append_if_no_line "Add #{s} shell" do
+    path '/etc/shells'
+    line s
+  end
 end
 
-group 'scponly'
+group 'scponly' do
+  system true
+end

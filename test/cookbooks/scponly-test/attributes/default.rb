@@ -1,4 +1,5 @@
------BEGIN RSA PRIVATE KEY-----
+default['scponly']['public_key'] = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDdGxkN6/NsJMnVNFPHm0mcNRk3y+UQfwOAqC6TM/fcMgkn4ptLjoloPgCmgF01cKGLSpGrFLtBV2LFKDgSvGpTvEzikW1vzgKyplwcSs6ZVYsraJ3wvAsKdyKFXjRJ4dDeWumvR1BhsmvcPABUOKXBQsaXor448hXwef/N/RRnP9rRORpxOdKcOvCgR1bwEdqZwum5ynWOS7agaXI2ToBLUV4Sygx9PeOB/lPHYiuMDtZEyWQgZX0xqvsAxjwM5mNAZoUVIm1zUBH7R/TpZieygF4QBfuKDI9+XmOFrdufti0jzQov1cIY1ptdpFnp84tWKsjLfDTR7/o5bNpUW0AZ centos@defaultcentos7-vancelot-oliveworkstationcassore-702zjsl.novaloca'
+default['scponly']['private_key'] = '-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA3RsZDevzbCTJ1TRTx5tJnDUZN8vlEH8DgKgukzP33DIJJ+Kb
 S46JaD4ApoBdNXChi0qRqxS7QVdixSg4ErxqU7xM4pFtb84CsqZcHErOmVWLK2id
 8LwLCncihV40SeHQ3lrpr0dQYbJr3DwAVDilwULGl6K+OPIV8Hn/zf0UZz/a0Tka
@@ -24,4 +25,4 @@ Nj+FsgcqlKUj3eeoeNsX+QTF0jbwwfFB9wmYZxLbmCExncjuaxLgiUXnP0CRI45D
 IagNUQKBgGR3MlmXkwVysuPS2j7Lh1JnVmwMDxi4v9J1VD6c3xJhua4mnMVpcoG6
 wj2N/d1fy6f/pc+XPLvONopnt4NnIzO3FvYfZ5q8sYjexU/jXvw65+tefwrb9Nwk
 byE8+NLRUi5ig1j6oUMfhZx4CZOwgBMDayXy7jOjtzYQdFXoZD0L
------END RSA PRIVATE KEY-----
+-----END RSA PRIVATE KEY-----'

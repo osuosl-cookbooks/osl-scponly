@@ -5,5 +5,12 @@ verifier:
 suites:
   - name: default
     run_list:
-      - recipe[osl-scponly::default]
-      - recipe[scponly-test::default]
+       - recipe[osl-scponly]
+  - name: _scponly
+    run_list:
+      - recipe[osl-scponly]
+      - recipe[scponly-test::scponly]
+  - name: _scponly-chroot
+    run_list:
+      - recipe[osl-scponly]
+      - recipe[scponly-test::scponly-chroot]
