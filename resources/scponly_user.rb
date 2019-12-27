@@ -13,70 +13,27 @@ action :create do
   run_context.include_recipe 'osl-scponly::default'
 
   if new_resource.chroot
-    directory '/home/chroot' do
-    end
-
     user new_resource.name do
       gid 'scponly'
-      home "/home/chroot//#{new_resource.name}"
       manage_home true
       shell '/usr/sbin/scponlyc'
     end
 
-    altroot = "/home/chroot//#{new_resource.name}"
-    %w(chgrp chmod chown ln ls mkdir mv rm rmdir scp).each do |bin|
-      bash "Chroot #{bin}" do
-        code <<-EOH
-          altroot="#{altroot}"
-          binary=$(which #{bin})
-          d=$(dirname ${binary})
-          if [ ! -d "${altroot}/${d}" ]; then
-            /bin/mkdir -p "${altroot}${d}"
-          fi
-          /bin/cp ${binary} "${altroot}${d}"
-
-          LIBS=$(ldd ${binary} | awk '{ print $3 }')
-
-          for i in ${LIBS}; do
-            d=$(dirname ${i})
-            if [ ! -d "${altroot}${d}" ]; then
-              /bin/mkdir -p "${altroot}${d}"
-            fi
-            /bin/cp "${i}" "${altroot}${d}"
-          done
-
-          ld="$(ldd "${binary}" | grep 'ld-linux' | awk '{ print $1 }')"
-          d="$(dirname "${ld}")"
-
-          if [ ! -d "${altroot}${d}" ]; then
-            /bin/mkdir -p "${altroot}${d}"
-          fi
-          bin/cp "${ld}" "${altroot}${d}"
-
-        EOH
-      end
+    directory "/home/#{new_resource.name}//#{new_resource.write_dir}"do 
+      owner 'root'
+      group 'scponly'
     end
 
-    bash "Chroot /usr/sbin/scponlyc" do
-      code <<-EOH
-        altroot="#{altroot}"
-        binary=/usr/sbin/scponlyc
-        d=$(dirname ${binary})
-        if [ ! -d "${altroot}/${d}" ]; then
-          /bin/mkdir -p "${altroot}${d}"
-        fi
-        /bin/cp ${binary} "${altroot}${d}"
+    altroot = "/home/#{new_resource.name}"
+    binaries = %w(/bin/chgrp /bin/chmod /bin/chown /bin/ln /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /usr/bin/scp /usr/sbin/scponlyc)
 
-        LIBS=$(ldd ${binary} | awk '{ print $3 }')
+    cookbook_file '/tmp/chroot.sh' do
+      source 'chroot.sh'
+      mode 0755
+    end
 
-        for i in ${LIBS}; do
-          d=$(dirname ${i})
-          if [ ! -d "${altroot}${d}" ]; then
-            /bin/mkdir -p "${altroot}${d}"
-          fi
-          /bin/cp "${i}" "${altroot}${d}"
-        done
-      EOH
+    execute 'Build chroot jail' do
+      command "bash /tmp/chroot.sh #{altroot} #{binaries.join(' ')}"
     end
 
     directory "#{altroot}/etc"
@@ -90,10 +47,10 @@ action :create do
       code "cat /etc/passwd | grep #{new_resource.name} > #{altroot}/etc/passwd"
     end
 
-    replace_or_add "Modify chroot /etc/passwd"do
+    replace_or_add 'Modify chroot /etc/passwd' do
       path "#{altroot}/etc/passwd"
       pattern /home.*/
-      line "#{altroot}//home/#{new_resource.name}:/usr/sbin/scponlyc"
+      line "#{altroot}:/usr/sbin/scponlyc"
     end
 
   else

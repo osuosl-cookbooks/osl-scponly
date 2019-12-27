@@ -13,7 +13,3 @@ file '/tmp/testfile.img' do
   owner 'scponly_test_chroot'
   group 'scponly_test_chroot'
 end
-
-execute 'fallocate -l 10m /tmp/testfile.img' do
-  creates '/tmp/testfile.img'
-end
