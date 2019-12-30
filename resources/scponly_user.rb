@@ -8,38 +8,48 @@ property :write_dir, String, default: 'incoming'
 property :public_key, String
 property :private_key, String
 property :chroot, [true, false], default: true
+property :altroot, String
+property :binaries, Array, default: %w(/bin/chgrp /bin/chmod /bin/chown /bin/ln /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /usr/bin/scp /usr/sbin/scponlyc)
 
 action :create do
   run_context.include_recipe 'osl-scponly::default'
 
   if new_resource.chroot
+
+    altroot = new_resource.altroot.nil? ? '/home/chroot' : new_resource.altroot
+
+    directory "#{altroot}//home/#{new_resource.name}"do
+      recursive true
+    end
+
     user new_resource.name do
-      gid 'scponly'
       manage_home true
+      home "#{altroot}//home/#{new_resource.name}"
       shell '/usr/sbin/scponlyc'
     end
 
-    directory "/home/#{new_resource.name}//#{new_resource.write_dir}"do 
+    directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}"do
       owner 'root'
       group 'scponly'
+      recursive true
     end
 
-    altroot = "/home/#{new_resource.name}"
-    binaries = %w(/bin/chgrp /bin/chmod /bin/chown /bin/ln /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /usr/bin/scp /usr/sbin/scponlyc)
 
-    cookbook_file '/tmp/chroot.sh' do
-      source 'chroot.sh'
+    directory '/usr/share/libexec/'
+    cookbook_file '/usr/share/libexec/scponly-chroot.sh' do
+      source 'scponly-chroot.sh'
       mode 0755
     end
 
     execute 'Build chroot jail' do
-      command "bash /tmp/chroot.sh #{altroot} #{binaries.join(' ')}"
+      command "bash /usr/share/libexec/scponly-chroot.sh #{altroot} #{new_resource.binaries.join(' ')}"
+      creates "#{altroot}/bin"
     end
 
     directory "#{altroot}/etc"
     %w(ld.so.cache ld.so.conf group).each do |c|
-      bash "Chroot /etc/#{c}" do
-        code "cp /etc/#{c} #{altroot}/etc/"
+      remote_file "#{altroot}/etc/#{c}" do
+        source "file:///etc/#{c}"
       end
     end
 
@@ -54,6 +64,7 @@ action :create do
     end
 
   else
+    altroot = '/'
     user new_resource.name do
       gid 'scponly'
       home "/home/#{new_resource.name}"
@@ -72,24 +83,24 @@ action :create do
     members new_resource.name
   end
 
-  directory "/home/#{new_resource.name}" do
+  directory "#{altroot}/home/#{new_resource.name}" do
     mode '0550'
   end
 
-  directory "/home/#{new_resource.name}/.ssh" do
+  directory "#{altroot}/home/#{new_resource.name}/.ssh" do
     mode '0550'
     owner new_resource.name
     group new_resource.name
   end
 
-  file "/home/#{new_resource.name}/.ssh/authorized_keys" do
+  file "#{altroot}/home/#{new_resource.name}/.ssh/authorized_keys" do
     content new_resource.public_key
     mode '0400'
     owner new_resource.name
     group new_resource.name
   end
 
-  file "/home/#{new_resource.name}/.ssh/id_rsa-scponly_user-#{new_resource.name}" do
+  file "#{altroot}/home/#{new_resource.name}/.ssh/id_rsa-scponly_user-#{new_resource.name}" do
     mode '0400'
     owner new_resource.name
     group new_resource.name

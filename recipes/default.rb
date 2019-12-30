@@ -20,7 +20,10 @@ include_recipe 'yum-epel'
 
 package 'scponly'
 
-%w( /usr/bin/scponly /usr/sbin/scponlyc ).each do |s|
+%w(
+  /usr/bin/scponly
+  /usr/sbin/scponlyc
+).each do |s|
   append_if_no_line "Add #{s} shell" do
     path '/etc/shells'
     line s

@@ -6,11 +6,11 @@ suites:
   - name: default
     run_list:
        - recipe[osl-scponly]
-  - name: _scponly
+  - name: scponly
     run_list:
       - recipe[osl-scponly]
       - recipe[scponly-test::scponly]
-  - name: _scponly-chroot
+  - name: scponly-chroot
     run_list:
       - recipe[osl-scponly]
       - recipe[scponly-test::scponly-chroot]
