@@ -1,4 +1,4 @@
-#true To learn more about Custom Resources, see https://docs.chef.io/custom_resources.html
+# true To learn more about Custom Resources, see https://docs.chef.io/custom_resources.html
 
 resource_name :scponly_user
 
@@ -9,7 +9,22 @@ property :public_key, String
 property :private_key, String
 property :chroot, [true, false], default: true
 property :altroot, String
-property :binaries, Array, default: %w(/bin/chgrp /bin/chmod /bin/chown /bin/ln /bin/ls /bin/mkdir /bin/mv /bin/rm /bin/rmdir /usr/bin/scp /usr/sbin/scponlyc)
+property :binaries,
+          Array,
+          default:
+          %w(
+            /bin/chgrp
+            /bin/chmod
+            /bin/chown
+            /bin/ln
+            /bin/ls
+            /bin/mkdir
+            /bin/mv
+            /bin/rm
+            /bin/rmdir
+            /usr/bin/scp
+            /usr/sbin/scponlyc
+          )
 
 action :create do
   run_context.include_recipe 'osl-scponly::default'
@@ -18,27 +33,28 @@ action :create do
 
     altroot = new_resource.altroot.nil? ? '/home/chroot' : new_resource.altroot
 
-    directory "#{altroot}//home/#{new_resource.name}"do
+    directory "#{altroot}/home/#{new_resource.name}" do
       recursive true
     end
 
     user new_resource.name do
+      gid 'scponly'
       manage_home true
-      home "#{altroot}//home/#{new_resource.name}"
+      home "#{altroot}/home/#{new_resource.name}"
       shell '/usr/sbin/scponlyc'
     end
 
-    directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}"do
+    directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}" do
       owner 'root'
       group 'scponly'
+      mode '0770'
       recursive true
     end
-
 
     directory '/usr/share/libexec/'
     cookbook_file '/usr/share/libexec/scponly-chroot.sh' do
       source 'scponly-chroot.sh'
-      mode 0755
+      mode '0755'
     end
 
     execute 'Build chroot jail' do
@@ -64,7 +80,7 @@ action :create do
     end
 
   else
-    altroot = '/'
+    altroot = ''
     user new_resource.name do
       gid 'scponly'
       home "/home/#{new_resource.name}"

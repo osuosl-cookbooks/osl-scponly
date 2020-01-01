@@ -5,7 +5,7 @@
 
 describe user('scponly_test_chroot') do
   it { should exist }
-  its('home') { should cmp '/home/chroot//home/scponly_test_chroot' }
+  its('home') { should cmp '/home/chroot/home/scponly_test_chroot' }
   its('shell') { should cmp '/usr/sbin/scponlyc' }
 end
 
@@ -20,7 +20,7 @@ end
 
 describe directory('/home/chroot/home/scponly_test_chroot/write') do
   it { should exist }
-  its('mode') { should cmp '0755' }
+  its('mode') { should cmp '0770' }
   its('owner') { should cmp 'root' }
   its('group') { should cmp 'scponly' }
 end

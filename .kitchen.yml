@@ -13,4 +13,4 @@ suites:
   - name: scponly-chroot
     run_list:
       - recipe[osl-scponly]
-      - recipe[scponly-test::scponly-chroot]
+      - recipe[scponly-test::scponly_chroot]

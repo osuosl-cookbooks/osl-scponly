@@ -1,6 +1,6 @@
 osl-scponly Cookbook
 ====================
-TODO: Enter the cookbook description here.
+Installs scponly and provides resources to create chrooted and non-chrooted scponly users
 
 e.g.
 This cookbook makes your favorite breakfast sandwich.

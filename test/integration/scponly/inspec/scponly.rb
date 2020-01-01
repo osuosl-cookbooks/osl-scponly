@@ -31,14 +31,14 @@ describe directory('/home/scponly_test/.ssh') do
   its('mode') { should cmp '0550' }
 end
 
-describe file("/home/scponly_test/.ssh/authorized_keys") do
+describe file('/home/scponly_test/.ssh/authorized_keys') do
   it { should exist }
   its('mode') { should cmp '0400' }
 end
 
-describe file("/home/scponly_test/.ssh/id_rsa-scponly_user-scponly_test") do
+describe file('/home/scponly_test/.ssh/id_rsa-scponly_user-scponly_test') do
   it { should exist }
-  its('mode') { should cmp '0400'}
+  its('mode') { should cmp '0400' }
 end
 
 describe file('/tmp/testfile.img') do
@@ -51,10 +51,10 @@ describe file('/home/scponly_test/write/testfile.img') do
   it { should_not exist }
 end
 
-describe command("scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/scponly_test/.ssh/id_rsa-scponly_user-scponly_test /tmp/testfile.img scponly_test@127.0.0.1:/home/scponly_test/write/testfile.img") do
+describe command('scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/scponly_test/.ssh/id_rsa-scponly_user-scponly_test /tmp/testfile.img scponly_test@127.0.0.1:/home/scponly_test/write/testfile.img') do
   its('exit_status') { should cmp 0 }
 end
 
-describe command("cmp /home/scponly_test/write/testfile.img /tmp/testfile.img") do
+describe command('cmp /home/scponly_test/write/testfile.img /tmp/testfile.img') do
   its('exit_status') { should cmp 0 }
 end

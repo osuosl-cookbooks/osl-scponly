@@ -5,7 +5,7 @@ scponly_user 'scponly_test_chroot' do
   chroot true
 end
 
-execute 'fallocate -l 10m /tmp/testfilec.img' do
+execute 'fallocate -l 10m /tmp/testfile.img' do
   creates '/tmp/testfile.img'
 end
 
