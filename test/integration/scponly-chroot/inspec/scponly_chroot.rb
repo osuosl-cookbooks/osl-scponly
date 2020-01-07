@@ -5,7 +5,7 @@
 
 describe user('scponly_test_chroot') do
   it { should exist }
-  its('home') { should cmp '/home/chroot/home/scponly_test_chroot' }
+  its('home') { should cmp '/home/chroot//home/scponly_test_chroot' }
   its('shell') { should cmp '/usr/sbin/scponlyc' }
 end
 
@@ -56,15 +56,15 @@ end
   end
 end
 
-describe command('scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/chroot/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot /tmp/testfile.img scponly_test_chroot@127.0.0.1:/home/chroot/home/scponly_test_chroot/write/testfile.img') do
+describe directory('/home/chroot/home/scponly_test_chroot/write') do
+  it { should exist }
+end
+
+describe command('scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/chroot/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot /tmp/testfile.img scponly_test_chroot@127.0.0.1:/home/scponly_test_chroot/write/testfile.img') do
   its('exit_status') { should cmp 0 }
   its('stderr') { should cmp 'asdf' }
 end
 
 describe command('cmp /home/chroot/home/scponly_test_chroot/write/testfile.img /tmp/testfile.img') do
   its('exit_status') { should cmp 0 }
-end
-
-describe directory('/home/chroot/home/chroot_testuser/write') do
-  it { should exist }
 end

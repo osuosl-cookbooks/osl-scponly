@@ -20,6 +20,10 @@ include_recipe 'yum-epel'
 
 package 'scponly'
 
+file '/usr/sbin/scponlyc' do
+  mode '4755'
+end
+
 %w(
   /usr/bin/scponly
   /usr/sbin/scponlyc
@@ -32,4 +36,9 @@ end
 
 group 'scponly' do
   system true
+end
+
+cookbook_file '/usr/libexec/scponly-chroot.sh' do
+  source 'scponly-chroot.sh'
+  mode '0755'
 end

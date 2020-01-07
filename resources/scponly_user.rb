@@ -22,7 +22,7 @@ property :binaries,
             /bin/mv
             /bin/rm
             /bin/rmdir
-            /usr/bin/scp
+            /bin/scp
             /usr/sbin/scponlyc
           )
 
@@ -33,15 +33,19 @@ action :create do
 
     altroot = new_resource.altroot.nil? ? '/home/chroot' : new_resource.altroot
 
-    directory "#{altroot}/home/#{new_resource.name}" do
+    directory "#{altroot}/home" do
+      group 'scponly'
       recursive true
     end
 
     user new_resource.name do
-      gid 'scponly'
       manage_home true
-      home "#{altroot}/home/#{new_resource.name}"
+      home "#{altroot}//home/#{new_resource.name}"
       shell '/usr/sbin/scponlyc'
+    end
+
+    group 'scponly' do
+      members new_resource.name
     end
 
     directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}" do
@@ -51,14 +55,8 @@ action :create do
       recursive true
     end
 
-    directory '/usr/share/libexec/'
-    cookbook_file '/usr/share/libexec/scponly-chroot.sh' do
-      source 'scponly-chroot.sh'
-      mode '0755'
-    end
-
     execute 'Build chroot jail' do
-      command "bash /usr/share/libexec/scponly-chroot.sh #{altroot} #{new_resource.binaries.join(' ')}"
+      command "/usr/libexec/scponly-chroot.sh #{altroot} #{new_resource.binaries.join(' ')}"
       creates "#{altroot}/bin"
     end
 
@@ -69,20 +67,18 @@ action :create do
       end
     end
 
-    bash 'Chroot /etc/passwd' do
-      code "cat /etc/passwd | grep #{new_resource.name} > #{altroot}/etc/passwd"
+    execute "grep #{new_resource.name} /etc/passwd > #{altroot}/etc/passwd" do
+      creates "#{altroot}/etc/passwd"
     end
 
-    replace_or_add 'Modify chroot /etc/passwd' do
-      path "#{altroot}/etc/passwd"
-      pattern /home.*/
-      line "#{altroot}:/usr/sbin/scponlyc"
+    filter_lines "#{altroot}/etc/passwd/" do
+      filters(substitute: [%r{/home/chroot}, %r{/home/chroot}, ''])
+      sensitive false
     end
 
   else
     altroot = ''
     user new_resource.name do
-      gid 'scponly'
       home "/home/#{new_resource.name}"
       manage_home true
       shell '/usr/bin/scponly'
@@ -101,6 +97,8 @@ action :create do
 
   directory "#{altroot}/home/#{new_resource.name}" do
     mode '0550'
+    owner 'root'
+    group new_resource.name
   end
 
   directory "#{altroot}/home/#{new_resource.name}/.ssh" do

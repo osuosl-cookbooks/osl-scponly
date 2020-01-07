@@ -1,1 +1,0 @@
-../../../../files/scponly-chroot.sh
