@@ -2,24 +2,19 @@ osl-scponly Cookbook
 ====================
 Installs scponly and provides resources to create chrooted and non-chrooted scponly users
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
-
 Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any
-requirements this cookbook has on platforms, libraries, other cookbooks,
-packages, operating systems, etc.
+============
 
-e.g.
+Platform
+--------
+* Centos 7+
+
+
 #### packages
-- `toaster` - osl-scponly needs toaster to brown your bagel.
+- `scponly` - osl-scponly needs scponly create scponly users
 
 Attributes
 ----------
-TODO: List your cookbook attributes here.
-
-e.g.
 #### osl-scponly::default
 <table>
   <tr>
@@ -29,28 +24,41 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['osl-scponly']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>default['scponly']['public_key']</tt></td>
+    <td>String</td>
+    <td>scponly user public key</td>
+    <td><tt>none</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['scponly']['private_key']</tt></td>
+    <td>String</td>
+    <td>scponly user private key</td>
+    <td><tt>none</tt></td>
   </tr>
 </table>
 
 Usage
 -----
 #### osl-scponly::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
-Just include `osl-scponly` in your node's `run_list`:
+Add osl-scponly dependency to your cookbook and utilize `scponly_user` resource as follows:
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[osl-scponly]"
-  ]
-}
+```ruby
+scponly_user 'scponly_test' do
+  write_dir 'write_dir'
+  public_key node['scponly']['public_key']
+  private_key node['scponly']['private_key']
+  chroot false
+end
+
+# to create a chrooted user
+scponly_user 'scponly_test_chroot' do
+  write_dir 'write_dir'
+  public_key node['scponly']['public_key']
+  private_key node['scponly']['private_key']
+  chroot true
+  altroot path_to_chroot
+end
 ```
 
 Contributing
