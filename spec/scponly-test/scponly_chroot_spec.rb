@@ -13,6 +13,8 @@ describe 'scponly-test::scponly_chroot' do
 
       it { expect { chef_run }.to_not raise_error }
 
+      include_examples 'scponly_user', 'scponly_test_chroot', '/home/chroot/home/scponly_test_chroot'
+
       it { expect(chef_run).to include_recipe('osl-scponly::default') }
 
       it do
@@ -22,32 +24,12 @@ describe 'scponly-test::scponly_chroot' do
         )
       end
 
-      it { expect(chef_run).to create_directory('/home/chroot/home/scponly_test_chroot') }
-
       it do
         expect(chef_run).to create_user('scponly_test_chroot').with(
-          gid: 'scponly',
-          home: '/home/chroot/home/scponly_test_chroot',
+          gid: 'scponly_test_chroot',
+          home: '/home/chroot//home/scponly_test_chroot',
           manage_home: true,
           shell: '/usr/sbin/scponlyc'
-        )
-      end
-
-      it do
-        expect(chef_run).to create_directory('/home/chroot/home/scponly_test_chroot/write').with(
-          owner: 'root',
-          group: 'scponly',
-          mode: '0770',
-          recursive: true
-        )
-      end
-
-      it { expect(chef_run).to create_directory('/usr/share/libexec/') }
-
-      it do
-        expect(chef_run).to create_cookbook_file('/usr/share/libexec/scponly-chroot.sh').with(
-          source: 'scponly-chroot.sh',
-          mode: '0755'
         )
       end
 
@@ -61,12 +43,12 @@ describe 'scponly-test::scponly_chroot' do
         /bin/mv
         /bin/rm
         /bin/rmdir
-        /usr/bin/scp
+        /bin/scp
         /usr/sbin/scponlyc
       )
       it do
         expect(chef_run).to run_execute('Build chroot jail').with(
-          command: "bash /usr/share/libexec/scponly-chroot.sh /home/chroot #{binaries.join(' ')}",
+          command: "/usr/libexec/scponly-chroot.sh /home/chroot #{binaries.join(' ')}",
           creates: '/home/chroot/bin'
         )
       end
@@ -80,50 +62,8 @@ describe 'scponly-test::scponly_chroot' do
       end
 
       it do
-        expect(chef_run).to run_bash('Chroot /etc/passwd').with(
-          code: 'cat /etc/passwd | grep scponly_test_chroot > /home/chroot/etc/passwd'
-        )
-      end
-
-      it { expect(chef_run).to create_group('scponly_test_chroot').with(members: ['scponly_test_chroot']) }
-
-      it { expect(chef_run).to create_directory('/home/chroot/home/scponly_test_chroot').with(mode: '0550') }
-
-      it do
-        expect(chef_run).to create_directory('/home/chroot/home/scponly_test_chroot/.ssh').with(
-          mode: '0550',
-          owner: 'scponly_test_chroot',
-          group: 'scponly_test_chroot'
-        )
-      end
-
-      it do
-        expect(chef_run).to create_file('/home/chroot/home/scponly_test_chroot/.ssh/authorized_keys').with(
-          mode: '0400',
-          owner: 'scponly_test_chroot',
-          group: 'scponly_test_chroot'
-        )
-      end
-
-      it do
-        expect(chef_run).to create_file('/home/chroot/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot').with(
-          mode: '0400',
-          owner: 'scponly_test_chroot',
-          group: 'scponly_test_chroot',
-          sensitive: true
-        )
-      end
-
-      it do
-        expect(chef_run).to run_execute('fallocate -l 10m /tmp/testfile.img').with(
-          creates: '/tmp/testfile.img'
-        )
-      end
-
-      it do
-        expect(chef_run).to create_file('/tmp/testfile.img').with(
-          owner: 'scponly_test_chroot',
-          group: 'scponly_test_chroot'
+        expect(chef_run).to run_execute('grep scponly_test_chroot /etc/passwd > /home/chroot/etc/passwd').with(
+          creates: '/home/chroot/etc/passwd'
         )
       end
     end
