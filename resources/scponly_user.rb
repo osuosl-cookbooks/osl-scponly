@@ -29,6 +29,8 @@ property :binaries,
 action :create do
   run_context.include_recipe 'osl-scponly::default'
 
+  group new_resource.name
+
   if new_resource.chroot
 
     altroot = new_resource.altroot.nil? ? '/home/chroot' : new_resource.altroot
@@ -39,13 +41,10 @@ action :create do
     end
 
     user new_resource.name do
+      gid new_resource.name
       manage_home true
       home "#{altroot}//home/#{new_resource.name}"
       shell '/usr/sbin/scponlyc'
-    end
-
-    group 'scponly' do
-      members new_resource.name
     end
 
     directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}" do
@@ -79,6 +78,7 @@ action :create do
   else
     altroot = ''
     user new_resource.name do
+      gid new_resource.name
       home "/home/#{new_resource.name}"
       manage_home true
       shell '/usr/bin/scponly'
@@ -91,7 +91,7 @@ action :create do
     end
   end
 
-  group new_resource.name do
+  group 'scponly' do
     members new_resource.name
   end
 

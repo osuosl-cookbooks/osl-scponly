@@ -31,7 +31,7 @@ do
 
 done
 
-/bin/cp "/lib64/libnss_* ${ALTROOT}/lib64/"
+/bin/cp /lib64/libnss_* ${ALTROOT}/lib64/
 
 if [ ! -d "${ALTROOT}/dev" ]; then
    mkdir -p "${ALTROOT}/dev"
