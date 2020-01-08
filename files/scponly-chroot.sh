@@ -33,9 +33,8 @@ done
 
 /bin/cp /lib64/libnss_* ${ALTROOT}/lib64/
 
-if [ ! -d "${ALTROOT}/dev" ]; then
-   mkdir -p "${ALTROOT}/dev"
-fi
+mkdir -p "${ALTROOT}/dev"
+
 mknod -m 666 ${ALTROOT}/dev/null c 1 3
 mknod -m 666 ${ALTROOT}/dev/zero c 1 5
 mknod -m 666 ${ALTROOT}/dev/tty c 5 0

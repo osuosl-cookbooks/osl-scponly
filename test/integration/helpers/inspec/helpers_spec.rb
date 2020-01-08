@@ -40,7 +40,10 @@ def scponly_test(user, home)
     it { should_not exist }
   end
 
-  describe command("scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i #{home}/.ssh/id_rsa-scponly_user-#{user} /tmp/testfile.img #{user}@127.0.0.1:/home/#{user}/write/testfile.img") do
+  scp_command = "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i \
+  #{home}/.ssh/id_rsa-scponly_user-#{user} /tmp/testfile.img #{user}@127.0.0.1:/home/#{user}/write/testfile.img"
+
+  describe command(scp_command) do
     its('exit_status') { should cmp 0 }
   end
 

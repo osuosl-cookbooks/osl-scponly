@@ -5,17 +5,18 @@
 
 require_relative '../../helpers/inspec/helpers_spec.rb'
 
-scponly_test('scponly_test_chroot', '/home/chroot/home/scponly_test_chroot')
+altroot = "/var/lib/chroots"
+scponly_test('scponly_test_chroot', "#{altroot}/home/scponly_test_chroot")
 
 describe user('scponly_test_chroot') do
   it { should exist }
-  its('home') { should cmp '/home/chroot//home/scponly_test_chroot' }
+  its('home') { should cmp "#{altroot}//home/scponly_test_chroot" }
   its('shell') { should cmp '/usr/sbin/scponlyc' }
   its('group') { should cmp 'scponly_test_chroot' }
 end
 
 %w(bin etc lib64 usr).each do |d|
-  describe directory("/home/chroot/#{d}") do
+  describe directory("#{altroot}/#{d}") do
     it { should exist }
   end
 end

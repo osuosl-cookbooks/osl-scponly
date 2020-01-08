@@ -64,17 +64,4 @@ shared_examples 'scponly_user' do |user, home|
       sensitive: true
     )
   end
-
-  it do
-    expect(chef_run).to run_execute('fallocate -l 10m /tmp/testfile.img').with(
-      creates: '/tmp/testfile.img'
-    )
-  end
-
-  it do
-    expect(chef_run).to create_file('/tmp/testfile.img').with(
-      owner: user,
-      group: user
-    )
-  end
 end

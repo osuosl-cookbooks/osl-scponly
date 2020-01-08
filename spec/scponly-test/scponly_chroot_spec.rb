@@ -13,7 +13,9 @@ describe 'scponly-test::scponly_chroot' do
 
       it { expect { chef_run }.to_not raise_error }
 
-      include_examples 'scponly_user', 'scponly_test_chroot', '/home/chroot/home/scponly_test_chroot'
+      altroot = '/var/lib/chroots'
+
+      include_examples 'scponly_user', 'scponly_test_chroot', "#{altroot}/home/scponly_test_chroot"
 
       it { expect(chef_run).to include_recipe('osl-scponly::default') }
 
@@ -27,7 +29,7 @@ describe 'scponly-test::scponly_chroot' do
       it do
         expect(chef_run).to create_user('scponly_test_chroot').with(
           gid: 'scponly_test_chroot',
-          home: '/home/chroot//home/scponly_test_chroot',
+          home: "#{altroot}//home/scponly_test_chroot",
           manage_home: true,
           shell: '/usr/sbin/scponlyc'
         )
@@ -48,22 +50,22 @@ describe 'scponly-test::scponly_chroot' do
       )
       it do
         expect(chef_run).to run_execute('Build chroot jail').with(
-          command: "/usr/libexec/scponly-chroot.sh /home/chroot #{binaries.join(' ')}",
-          creates: '/home/chroot/bin'
+          command: "/usr/libexec/scponly-chroot.sh #{altroot} #{binaries.join(' ')}",
+          creates: "#{altroot}/bin"
         )
       end
 
       %w(ld.so.cache ld.so.conf group).each do |c|
         it do
-          expect(chef_run).to create_remote_file("/home/chroot/etc/#{c}").with(
+          expect(chef_run).to create_remote_file("#{altroot}/etc/#{c}").with(
             source: "file:///etc/#{c}"
           )
         end
       end
 
       it do
-        expect(chef_run).to run_execute('grep scponly_test_chroot /etc/passwd > /home/chroot/etc/passwd').with(
-          creates: '/home/chroot/etc/passwd'
+        expect(chef_run).to run_execute("grep scponly_test_chroot /etc/passwd > #{altroot}/etc/passwd").with(
+          creates: "#{altroot}/etc/passwd"
         )
       end
     end

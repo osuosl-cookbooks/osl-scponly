@@ -7,35 +7,11 @@ Requirements
 
 Platform
 --------
-* Centos 7+
+* Centos 7
 
 
 #### packages
 - `scponly` - osl-scponly needs scponly create scponly users
-
-Attributes
-----------
-#### osl-scponly::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>default['scponly']['public_key']</tt></td>
-    <td>String</td>
-    <td>scponly user public key</td>
-    <td><tt>none</tt></td>
-  </tr>
-  <tr>
-    <td><tt>default['scponly']['private_key']</tt></td>
-    <td>String</td>
-    <td>scponly user private key</td>
-    <td><tt>none</tt></td>
-  </tr>
-</table>
 
 Usage
 -----
@@ -46,16 +22,12 @@ Add osl-scponly dependency to your cookbook and utilize `scponly_user` resource 
 ```ruby
 scponly_user 'scponly_test' do
   write_dir 'write_dir'
-  public_key node['scponly']['public_key']
-  private_key node['scponly']['private_key']
   chroot false
 end
 
 # to create a chrooted user
 scponly_user 'scponly_test_chroot' do
   write_dir 'write_dir'
-  public_key node['scponly']['public_key']
-  private_key node['scponly']['private_key']
   chroot true
   altroot path_to_chroot
 end

@@ -8,7 +8,7 @@ property :write_dir, String, default: 'incoming'
 property :public_key, String
 property :private_key, String
 property :chroot, [true, false], default: true
-property :altroot, String
+property :altroot, String, default: '/var/lib/chroots'
 property :binaries,
           Array,
           default:
@@ -33,7 +33,7 @@ action :create do
 
   if new_resource.chroot
 
-    altroot = new_resource.altroot.nil? ? '/home/chroot' : new_resource.altroot
+    altroot = new_resource.altroot
 
     directory "#{altroot}/home" do
       group 'scponly'
