@@ -5,7 +5,7 @@
 
 require_relative '../../helpers/inspec/helpers_spec.rb'
 
-altroot = "/var/lib/chroots"
+altroot = '/var/lib/chroots'
 scponly_test('scponly_test_chroot', "#{altroot}/home/scponly_test_chroot")
 
 describe user('scponly_test_chroot') do

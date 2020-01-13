@@ -6,7 +6,6 @@ default_action :create
 
 property :write_dir, String, default: 'incoming'
 property :public_key, String
-property :private_key, String
 property :chroot, [true, false], default: true
 property :altroot, String, default: '/var/lib/chroots'
 property :binaries,
@@ -112,13 +111,5 @@ action :create do
     mode '0400'
     owner new_resource.name
     group new_resource.name
-  end
-
-  file "#{altroot}/home/#{new_resource.name}/.ssh/id_rsa-scponly_user-#{new_resource.name}" do
-    mode '0400'
-    owner new_resource.name
-    group new_resource.name
-    content new_resource.private_key
-    sensitive true
   end
 end
