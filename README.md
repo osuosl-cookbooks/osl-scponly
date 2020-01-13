@@ -22,12 +22,14 @@ Add osl-scponly dependency to your cookbook and utilize `scponly_user` resource 
 ```ruby
 scponly_user 'scponly_test' do
   write_dir 'write_dir'
+  public_key 'public_key'
   chroot false
 end
 
 # to create a chrooted user
 scponly_user 'scponly_test_chroot' do
   write_dir 'write_dir'
+  public_key 'public_key'
   chroot true
   altroot path_to_chroot
 end

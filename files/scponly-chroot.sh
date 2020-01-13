@@ -31,12 +31,12 @@ do
 
 done
 
-/bin/cp /lib64/libnss_* ${ALTROOT}/lib64/
+/bin/cp /lib64/libnss_* "${ALTROOT}/lib64/"
 
-mkdir -p "${ALTROOT}/dev"
+/bin/mkdir -p "${ALTROOT}/dev"
 
-mknod -m 666 ${ALTROOT}/dev/null c 1 3
-mknod -m 666 ${ALTROOT}/dev/zero c 1 5
-mknod -m 666 ${ALTROOT}/dev/tty c 5 0
-mknod -m 444 ${ALTROOT}/dev/random c 1 8
-mknod -m 444 ${ALTROOT}/dev/urandom c 1 9
+/bin/mknod -m 666 "${ALTROOT}/dev/null" c 1 3
+/bin/mknod -m 666 "${ALTROOT}/dev/zero" c 1 5
+/bin/mknod -m 666 "${ALTROOT}/dev/tty" c 5 0
+/bin/mknod -m 444 "${ALTROOT}/dev/random" c 1 8
+/bin/mknod -m 444 "${ALTROOT}/dev/urandom" c 1 9
