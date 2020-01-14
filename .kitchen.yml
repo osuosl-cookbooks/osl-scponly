@@ -1,0 +1,16 @@
+---
+verifier:
+  name: inspec
+
+suites:
+  - name: default
+    run_list:
+       - recipe[osl-scponly]
+  - name: scponly
+    run_list:
+      - recipe[osl-scponly]
+      - recipe[scponly-test::scponly]
+  - name: scponly-chroot
+    run_list:
+      - recipe[osl-scponly]
+      - recipe[scponly-test::scponly_chroot]

@@ -15,3 +15,30 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+include_recipe 'yum-epel'
+
+package 'scponly'
+
+file '/usr/sbin/scponlyc' do
+  mode '4755'
+end
+
+%w(
+  /usr/bin/scponly
+  /usr/sbin/scponlyc
+).each do |s|
+  append_if_no_line "Add #{s} shell" do
+    path '/etc/shells'
+    line s
+  end
+end
+
+group 'scponly' do
+  system true
+end
+
+cookbook_file '/usr/libexec/scponly-chroot.sh' do
+  source 'scponly-chroot.sh'
+  mode '0755'
+end

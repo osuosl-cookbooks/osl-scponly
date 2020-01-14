@@ -1,56 +1,38 @@
 osl-scponly Cookbook
 ====================
-TODO: Enter the cookbook description here.
-
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+Installs scponly and provides resources to create chrooted and non-chrooted scponly users
 
 Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any
-requirements this cookbook has on platforms, libraries, other cookbooks,
-packages, operating systems, etc.
+============
 
-e.g.
+Platform
+--------
+* Centos 7
+
+
 #### packages
-- `toaster` - osl-scponly needs toaster to brown your bagel.
-
-Attributes
-----------
-TODO: List your cookbook attributes here.
-
-e.g.
-#### osl-scponly::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['osl-scponly']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+- `scponly` - osl-scponly needs scponly create scponly users
 
 Usage
 -----
 #### osl-scponly::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
-Just include `osl-scponly` in your node's `run_list`:
+Add osl-scponly dependency to your cookbook and utilize `scponly_user` resource as follows:
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[osl-scponly]"
-  ]
-}
+```ruby
+scponly_user 'scponly_test' do
+  write_dir 'write_dir'
+  public_key 'public_key'
+  chroot false
+end
+
+# to create a chrooted user
+scponly_user 'scponly_test_chroot' do
+  write_dir 'write_dir'
+  public_key 'public_key'
+  chroot true
+  altroot path_to_chroot
+end
 ```
 
 Contributing
