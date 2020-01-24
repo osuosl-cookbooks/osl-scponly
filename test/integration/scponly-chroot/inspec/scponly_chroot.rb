@@ -15,6 +15,10 @@ describe user('scponly_test_chroot') do
   its('group') { should cmp 'scponly_test_chroot' }
 end
 
+describe file '/var/lib/chroots/etc/passwd' do
+  its('content') { should match %r{^scponly_test_chroot:x:1001:1001::/home/scponly_test_chroot:/usr/sbin/scponlyc$} }
+end
+
 %w(bin etc lib64 usr).each do |d|
   describe directory("#{altroot}/#{d}") do
     it { should exist }
