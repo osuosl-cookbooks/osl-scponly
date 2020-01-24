@@ -68,6 +68,15 @@ describe 'scponly-test::scponly_chroot' do
           creates: "#{altroot}/etc/passwd"
         )
       end
+      it do
+        expect(chef_run).to edit_filter_lines('/var/lib/chroots/etc/passwd')
+          .with(
+            filters: {
+              substitute: [%r{/var/lib/chroots}, %r{/var/lib/chroots/}, ''],
+            },
+            sensitive: false
+          )
+      end
     end
   end
 end

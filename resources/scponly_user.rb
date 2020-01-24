@@ -69,8 +69,8 @@ action :create do
       creates "#{altroot}/etc/passwd"
     end
 
-    filter_lines "#{altroot}/etc/passwd/" do
-      filters(substitute: [%r{/home/chroot}, %r{/home/chroot}, ''])
+    filter_lines "#{altroot}/etc/passwd" do
+      filters(substitute: [/#{altroot}/, %r{#{altroot}/}, ''])
       sensitive false
     end
 
