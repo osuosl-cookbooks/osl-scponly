@@ -36,7 +36,6 @@ end
 
 group 'scponly' do
   system true
-  not_if 'grep scponly /etc/passwd'
 end
 
 cookbook_file '/usr/libexec/scponly-chroot.sh' do

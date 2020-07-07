@@ -20,9 +20,6 @@ describe 'osl-scponly::default' do
       end
 
       it { expect(chef_run).to create_group('scponly').with(system: true) }
-      before do
-        stub_command('grep scponly /etc/passwd')
-      end
       it do
         expect(chef_run).to create_cookbook_file('/usr/libexec/scponly-chroot.sh').with(
           source: 'scponly-chroot.sh',

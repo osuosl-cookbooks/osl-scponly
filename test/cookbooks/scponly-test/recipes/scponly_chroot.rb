@@ -2,7 +2,6 @@ scponly_user 'scponly_test_chroot' do
   write_dir 'write'
   public_key node['scponly']['public_key']
   chroot true
-  not_if 'grep scponly_test_chroot /etc/passwd'
 end
 
 file '/var/lib/chroots/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot' do

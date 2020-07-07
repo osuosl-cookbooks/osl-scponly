@@ -19,11 +19,6 @@ describe 'scponly-test::scponly_chroot' do
 
       it { expect(chef_run).to include_recipe('osl-scponly::default') }
 
-      before do
-        stub_command('grep scponly /etc/passwd')
-        stub_command('grep scponly_test_chroot /etc/passwd')
-      end
-
       it do
         expect(chef_run).to create_scponly_user('scponly_test_chroot').with(
           write_dir: 'write',

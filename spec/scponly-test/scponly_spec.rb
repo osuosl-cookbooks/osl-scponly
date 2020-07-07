@@ -15,11 +15,7 @@ describe 'scponly-test::scponly' do
 
       include_examples 'scponly_user', 'scponly_test', '/home/scponly_test'
 
-      it { expect(chef_run).to include_recipe('osl-scponly::default') }\
-
-      before do
-        stub_command('grep scponly /etc/passwd')
-      end
+      it { expect(chef_run).to include_recipe('osl-scponly::default') }
 
       it do
         expect(chef_run).to create_scponly_user('scponly_test').with(
