@@ -36,6 +36,7 @@ end
 
 group 'scponly' do
   system true
+  append true
 end
 
 cookbook_file '/usr/libexec/scponly-chroot.sh' do

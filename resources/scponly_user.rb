@@ -90,10 +90,11 @@ action :create do
     end
   end
 
-  temp = new_resource.name
-
-  edit_resource(:group, 'scponly') do
-    members temp
+  group "scponly append #{new_resource.name}" do
+    group_name 'scponly'
+    append true
+    members new_resource.name
+    action :modify
   end
 
   directory "#{altroot}/home/#{new_resource.name}" do

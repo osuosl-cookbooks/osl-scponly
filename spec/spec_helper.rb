@@ -35,7 +35,7 @@ shared_examples 'scponly_user' do |user, home|
   end
 
   it do
-    expect(chef_run).to create_group('scponly').with(
+    expect(chef_run).to modify_group('scponly').with(
       members: [ user ]
     )
   end
