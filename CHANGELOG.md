@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.1.0 (2020-07-13)
+------------------
+- Chef 15 Fixes
+
 1.0.2 (2020-01-24)
 ------------------
 - Fix filter_lines to use altroot parameter
