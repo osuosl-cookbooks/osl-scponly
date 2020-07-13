@@ -2,7 +2,7 @@
 # Cookbook:: osl-scponly
 # Recipe:: default
 #
-# Copyright:: 2019, Oregon State University
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ end
 
 group 'scponly' do
   system true
+  append true
 end
 
 cookbook_file '/usr/libexec/scponly-chroot.sh' do

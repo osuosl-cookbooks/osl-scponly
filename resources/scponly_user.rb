@@ -46,6 +46,13 @@ action :create do
       shell '/usr/sbin/scponlyc'
     end
 
+    group "scponly append #{new_resource.name}" do
+      group_name 'scponly'
+      append true
+      members new_resource.name
+      action :modify
+    end
+
     directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}" do
       owner 'root'
       group 'scponly'
@@ -82,16 +89,20 @@ action :create do
       manage_home true
       shell '/usr/bin/scponly'
     end
+
+    group "scponly append #{new_resource.name}" do
+      group_name 'scponly'
+      append true
+      members new_resource.name
+      action :modify
+    end
+
     directory "/home/#{new_resource.name}/#{new_resource.write_dir}" do
       owner 'root'
       group 'scponly'
       mode '0770'
       recursive true
     end
-  end
-
-  group 'scponly' do
-    members new_resource.name
   end
 
   directory "#{altroot}/home/#{new_resource.name}" do
