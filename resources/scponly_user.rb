@@ -1,6 +1,7 @@
 # true To learn more about Custom Resources, see https://docs.chef.io/custom_resources.html
 
 resource_name :scponly_user
+provides :scponly_user
 
 default_action :create
 
