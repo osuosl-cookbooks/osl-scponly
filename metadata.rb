@@ -9,6 +9,7 @@ description      'Installs/Configures osl-scponly'
 version          '1.1.0'
 
 supports         'centos', '~> 7.0'
+supports         'centos', '~> 8.0'
 
 depends          'line'
 depends          'yum-epel'
