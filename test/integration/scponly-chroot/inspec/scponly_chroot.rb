@@ -3,7 +3,7 @@
 # The InSpec reference, with examples and extensive documentation, can be
 # found at http://inspec.io/docs/reference/resources/
 
-require_relative '../../helpers/inspec/helpers_spec.rb'
+require_relative '../../helpers/inspec/helpers_spec'
 
 altroot = '/var/lib/chroots'
 scponly_test('scponly_test_chroot', "#{altroot}/home/scponly_test_chroot")
