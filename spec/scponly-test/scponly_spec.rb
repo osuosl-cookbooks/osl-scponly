@@ -1,4 +1,4 @@
-require_relative '../spec_helper.rb'
+require_relative '../spec_helper'
 
 describe 'scponly-test::scponly' do
   ALL_PLATFORMS.each do |p|
