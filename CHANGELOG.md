@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.2.1 (2021-01-19)
+------------------
+- Cookstyle fixes
+
 1.2.0 (2020-09-03)
 ------------------
 - Chef 16 Fixes
