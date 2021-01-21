@@ -12,4 +12,4 @@ supports         'centos', '~> 7.0'
 supports         'centos', '~> 8.0'
 
 depends          'line'
-depends          'yum-epel'
+depends          'osl-repos'
