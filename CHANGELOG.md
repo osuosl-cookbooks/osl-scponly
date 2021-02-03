@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.3.0 (2021-02-03)
+------------------
+- Replace any occurrence of yum-centos/yum-epel/yum-elrepo with osl-repos equivalents
+
 1.2.1 (2021-01-19)
 ------------------
 - Cookstyle fixes
