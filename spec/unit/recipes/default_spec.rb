@@ -9,7 +9,7 @@ describe 'osl-scponly::default' do
 
       it { expect { chef_run }.to_not raise_error }
 
-      it { expect(chef_run).to include_recipe('yum-epel') }
+      it { expect(chef_run).to include_recipe('osl-repos::epel') }
 
       it { expect(chef_run).to install_package('scponly') }
 
