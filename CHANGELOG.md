@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.4.0 (2021-04-07)
+------------------
+- Update Chef dependency to >= 16
+
 1.3.0 (2021-02-03)
 ------------------
 - Replace any occurrence of yum-centos/yum-epel/yum-elrepo with osl-repos equivalents

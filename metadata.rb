@@ -6,7 +6,7 @@ issues_url       'https://github.com/osuosl-cookbooks/osl-scponly/issues'
 license          'Apache-2.0'
 chef_version     '>= 16.0'
 description      'Installs/Configures osl-scponly'
-version          '1.3.0'
+version          '1.4.0'
 
 supports         'centos', '~> 7.0'
 supports         'centos', '~> 8.0'
