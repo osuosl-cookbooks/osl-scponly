@@ -2,6 +2,7 @@
 
 resource_name :scponly_user
 provides :scponly_user
+unified_mode true
 
 default_action :create
 
