@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.5.0 (2021-06-16)
+------------------
+- Set unified_mode for custom resources
+
 1.4.0 (2021-04-07)
 ------------------
 - Update Chef dependency to >= 16
