@@ -9,7 +9,7 @@ description      'Installs/Configures osl-scponly'
 version          '1.5.0'
 
 supports         'centos', '~> 7.0'
-supports         'centos', '~> 8.0'
+supports         'centos_stream', '~> 8.0'
 
 depends          'line'
 depends          'osl-repos'
