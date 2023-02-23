@@ -32,6 +32,7 @@ def scponly_test(user, home)
 
   describe file('/tmp/testfile.img') do
     it { should exist }
+    its('mode') { should cmp '0644' }
     its('owner') { should cmp user }
     its('group') { should cmp user }
   end
@@ -40,11 +41,17 @@ def scponly_test(user, home)
     it { should_not exist }
   end
 
-  scp_command = "sudo scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i \
+  describe port('0.0.0.0', 22) do
+    it { should be_listening }
+  end
+
+  scp_command = "sudo scp -vvv -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i \
   #{home}/.ssh/id_rsa-scponly_user-#{user} /tmp/testfile.img #{user}@127.0.0.1:/home/#{user}/write/testfile.img"
 
+  # The following three tests are failing due to the SCP below not completing hence the following two tests don't have the file.
   describe command(scp_command) do
     its('exit_status') { should cmp 0 }
+    # its('stderr') { should eq "" }
   end
 
   describe command("cmp #{home}/write/testfile.img /tmp/testfile.img") do
