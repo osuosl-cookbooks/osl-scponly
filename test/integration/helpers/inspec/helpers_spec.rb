@@ -23,11 +23,13 @@ def scponly_test(user, home)
   describe file("#{home}/.ssh/authorized_keys") do
     it { should exist }
     its('mode') { should cmp '0400' }
+    its('owner') { should cmp user }
   end
 
   describe file("#{home}/.ssh/id_rsa-scponly_user-#{user}") do
     it { should exist }
     its('mode') { should cmp '0400' }
+    its('owner') { should cmp user }
   end
 
   describe file('/tmp/testfile.img') do
@@ -49,8 +51,10 @@ def scponly_test(user, home)
   #{home}/.ssh/id_rsa-scponly_user-#{user} /tmp/testfile.img #{user}@127.0.0.1:/home/#{user}/write/testfile.img"
 
   # The following three tests are failing due to the SCP below not completing hence the following two tests don't have the file.
+  #The home directory is not the correct path. the SSH key could be put in the wrong path
   describe command(scp_command) do
     its('exit_status') { should cmp 0 }
+    # Checking what stderr is outputting 
     # its('stderr') { should eq "" }
   end
 
