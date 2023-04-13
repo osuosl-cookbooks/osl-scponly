@@ -14,3 +14,4 @@ supports         'centos', '~> 8.0'
 
 depends          'line'
 depends          'osl-repos'
+depends          'osl-selinux'
