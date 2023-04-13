@@ -1,7 +1,13 @@
+include_recipe 'osl-selinux'
+
 scponly_user 'scponly_test_chroot' do
   write_dir 'write'
   public_key node['scponly']['public_key']
   chroot true
+end
+
+selinux_fcontext '/var/lib/chroots/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot' do
+  secontext      'httpd_sys_rw_content_t'
 end
 
 file '/var/lib/chroots/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot' do
