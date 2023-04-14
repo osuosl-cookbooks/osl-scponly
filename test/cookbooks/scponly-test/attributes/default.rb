@@ -1,4 +1,4 @@
-# Commit for comment
+# rubocop:disable Chef/Security/SshPrivateKey
 default['scponly']['public_key'] = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDdGxkN6/NsJMnVNFPHm0mcNRk3y+UQfwOAqC6TM/fcMgkn4ptLjoloPgCmgF01cKGLSpGrFLtBV2LFKDgSvGpTvEzikW1vzgKyplwcSs6ZVYsraJ3wvAsKdyKFXjRJ4dDeWumvR1BhsmvcPABUOKXBQsaXor448hXwef/N/RRnP9rRORpxOdKcOvCgR1bwEdqZwum5ynWOS7agaXI2ToBLUV4Sygx9PeOB/lPHYiuMDtZEyWQgZX0xqvsAxjwM5mNAZoUVIm1zUBH7R/TpZieygF4QBfuKDI9+XmOFrdufti0jzQov1cIY1ptdpFnp84tWKsjLfDTR7/o5bNpUW0AZ centos@defaultcentos7-vancelot-oliveworkstationcassore-702zjsl.novaloca'
 default['scponly']['private_key'] = '-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA3RsZDevzbCTJ1TRTx5tJnDUZN8vlEH8DgKgukzP33DIJJ+Kb
