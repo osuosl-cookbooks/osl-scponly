@@ -7,7 +7,7 @@ scponly_user 'scponly_test_chroot' do
 end
 
 selinux_fcontext '/var/lib/chroots/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot' do
-  secontext      'httpd_sys_rw_content_t'
+  secontext      'ssh_home_t'
 end
 
 file '/var/lib/chroots/home/scponly_test_chroot/.ssh/id_rsa-scponly_user-scponly_test_chroot' do
