@@ -23,15 +23,18 @@ def scponly_test(user, home)
   describe file("#{home}/.ssh/authorized_keys") do
     it { should exist }
     its('mode') { should cmp '0400' }
+    its('owner') { should cmp user }
   end
 
   describe file("#{home}/.ssh/id_rsa-scponly_user-#{user}") do
     it { should exist }
     its('mode') { should cmp '0400' }
+    its('owner') { should cmp user }
   end
 
   describe file('/tmp/testfile.img') do
     it { should exist }
+    its('mode') { should cmp '0644' }
     its('owner') { should cmp user }
     its('group') { should cmp user }
   end
@@ -40,7 +43,11 @@ def scponly_test(user, home)
     it { should_not exist }
   end
 
-  scp_command = "sudo scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i \
+  describe port('0.0.0.0', 22) do
+    it { should be_listening }
+  end
+
+  scp_command = "sudo scp -vvv -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i \
   #{home}/.ssh/id_rsa-scponly_user-#{user} /tmp/testfile.img #{user}@127.0.0.1:/home/#{user}/write/testfile.img"
 
   describe command(scp_command) do
