@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.5.1 (2023-04-18)
+------------------
+- Alma Linux 8 and CentOS Stream 8 compatibility 
+
 1.5.0 (2021-06-16)
 ------------------
 - Set unified_mode for custom resources
