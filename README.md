@@ -5,9 +5,10 @@ Installs scponly and provides resources to create chrooted and non-chrooted scpo
 Requirements
 ============
 
-Platform
+Platforms
 --------
 * Centos 7
+* Almalinux 8
 
 
 #### packages
