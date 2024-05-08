@@ -26,9 +26,11 @@ suites:
        - recipe[osl-scponly]
   - name: scponly
     run_list:
+      - recipe[scponly-test::sshd]
       - recipe[osl-scponly]
       - recipe[scponly-test::scponly]
   - name: scponly-chroot
     run_list:
+      - recipe[scponly-test::sshd]
       - recipe[osl-scponly]
       - recipe[scponly-test::scponly_chroot]

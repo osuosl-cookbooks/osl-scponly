@@ -16,7 +16,7 @@ describe user('scponly_test_chroot') do
 end
 
 describe file '/var/lib/chroots/etc/passwd' do
-  its('content') { should match %r{^scponly_test_chroot:x:(1001|1002):(1001|1002)::/home/scponly_test_chroot:/usr/sbin/scponlyc$} }
+  its('content') { should match %r{^scponly_test_chroot:x:(1000|1001|1002):(1000|1001|1002)::/home/scponly_test_chroot:/usr/sbin/scponlyc$} }
 end
 
 %w(bin etc lib64 usr).each do |d|
