@@ -9,7 +9,6 @@ description      'Installs/Configures osl-scponly'
 version          '1.5.2'
 
 supports         'almalinux', '~> 8.0'
-supports         'centos', '~> 7.0'
 
 depends          'line'
 depends          'osl-repos'

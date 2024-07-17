@@ -7,7 +7,6 @@ Requirements
 
 Platforms
 --------
-* Centos 7
 * Almalinux 8
 
 
