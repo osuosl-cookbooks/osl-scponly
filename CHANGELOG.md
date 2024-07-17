@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.6.0 (2024-07-17)
+------------------
+- Remove support for CentOS 7
+
 1.5.2 (2024-05-08)
 ------------------
 - Test Kitchen Config Refactor
