@@ -9,7 +9,9 @@ description      'Installs/Configures osl-scponly'
 version          '1.6.0'
 
 supports         'almalinux', '~> 8.0'
+supports         'almalinux', '~> 9.0'
 
 depends          'line'
 depends          'osl-repos'
 depends          'osl-selinux'
+depends          'yum-osuosl'
