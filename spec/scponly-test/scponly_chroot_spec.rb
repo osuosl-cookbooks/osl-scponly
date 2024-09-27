@@ -46,6 +46,7 @@ describe 'scponly-test::scponly_chroot' do
         /bin/rm
         /bin/rmdir
         /bin/scp
+        /usr/libexec/openssh/sftp-server
         /usr/sbin/scponlyc
       )
       it do

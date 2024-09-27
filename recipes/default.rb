@@ -17,6 +17,7 @@
 # limitations under the License.
 
 include_recipe 'osl-repos::epel'
+include_recipe 'yum-osuosl'
 
 package 'scponly'
 
