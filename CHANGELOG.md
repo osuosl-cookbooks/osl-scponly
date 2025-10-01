@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.6.2 (2025-10-01)
+------------------
+- Almalinux 10 support
+
 1.6.1 (2024-09-27)
 ------------------
 - Add support for AlmaLinux 9
