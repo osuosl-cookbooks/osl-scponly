@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.6.3 (2026-06-29)
+------------------
+- cinc: updated kitchen and dokken files
+
 1.6.2 (2025-10-01)
 ------------------
 - Almalinux 10 support
