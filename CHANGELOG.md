@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.6.4 (2026-09-18)
+------------------
+- Cookstyle Cleanup
+
 1.6.3 (2026-06-29)
 ------------------
 - cinc: updated kitchen and dokken files
