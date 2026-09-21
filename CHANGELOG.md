@@ -3,6 +3,10 @@ osl-scponly CHANGELOG
 This file is used to list changes made in each version of the
 osl-scponly cookbook.
 
+1.6.5 (2026-09-21)
+------------------
+- chef 19 update
+
 1.6.4 (2026-09-18)
 ------------------
 - Cookstyle Cleanup
