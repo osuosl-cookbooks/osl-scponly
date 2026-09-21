@@ -12,7 +12,7 @@ do
 
   /bin/cp "${b}" "${ALTROOT}${d}"
 
-  LIBS=$(ldd "${b}" | awk '{ print $3 }' | egrep -v -v ^'\(')
+  LIBS=$(ldd "${b}" | awk '{ print $3 }' | grep -Ev '^\(')
 
   for i in ${LIBS}; do
     d=$(dirname "${i}")
