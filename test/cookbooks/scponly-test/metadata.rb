@@ -9,3 +9,4 @@ description      'Tests osl-scponly'
 version          '0.1.0'
 
 depends 'osl-scponly'
+depends 'osl-selinux'

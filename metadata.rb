@@ -14,5 +14,4 @@ supports 'almalinux', '~> 10.0'
 
 depends 'line'
 depends 'osl-repos'
-depends 'osl-selinux'
 depends 'yum-osuosl'
