@@ -1,7 +1,6 @@
 ---
 driver:
   name: vagrant
-  flavor_ref: m1.medium
 
 verifier:
   name: inspec
