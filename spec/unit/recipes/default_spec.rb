@@ -19,6 +19,15 @@ describe 'osl-scponly::default' do
         )
       end
 
+      %w(/usr/bin/scponly /usr/sbin/scponlyc).each do |shell|
+        it do
+          expect(chef_run).to edit_append_if_no_line("Add #{shell} shell").with(
+            path: '/etc/shells',
+            line: shell
+          )
+        end
+      end
+
       it { expect(chef_run).to create_group('scponly').with(system: true) }
       it do
         expect(chef_run).to create_cookbook_file('/usr/libexec/scponly-chroot.sh').with(
