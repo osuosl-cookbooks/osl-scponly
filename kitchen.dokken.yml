@@ -2,7 +2,7 @@
 driver:
   name: dokken
   privileged: true  # because Docker and SystemD/Upstart
-  chef_version: <%= ENV['CHEF_VERSION'] || '18' %>
+  chef_version: <%= ENV['CHEF_VERSION'] || '19' %>
 
 transport:
   name: dokken
@@ -20,4 +20,8 @@ platforms:
   - name: almalinux-9
     driver:
       image: dokken/almalinux-9
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: almalinux-10
+    driver:
+      image: dokken/almalinux-10
       pid_one_command: /usr/lib/systemd/systemd
