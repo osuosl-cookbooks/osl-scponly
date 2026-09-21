@@ -12,11 +12,11 @@ file '/home/scponly_test/.ssh/id_rsa-scponly_user-scponly_test' do
   sensitive true
 end
 
-execute 'fallocate -l 10m /tmp/testfile.img' do
-  creates '/tmp/testfile.img'
+execute 'fallocate -l 10m /tmp/testfile-scponly_test.img' do
+  creates '/tmp/testfile-scponly_test.img'
 end
 
-file '/tmp/testfile.img' do
+file '/tmp/testfile-scponly_test.img' do
   owner 'scponly_test'
   group 'scponly_test'
 end

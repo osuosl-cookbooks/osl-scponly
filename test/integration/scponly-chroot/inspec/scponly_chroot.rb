@@ -6,17 +6,25 @@
 require_relative '../../helpers/inspec/helpers_spec'
 
 altroot = '/var/lib/chroots'
-scponly_test('scponly_test_chroot', "#{altroot}/home/scponly_test_chroot")
+accounts = %w(scponly_test_chroot scponly_test_chroot2)
 
-describe user('scponly_test_chroot') do
-  it { should exist }
-  its('home') { should cmp "#{altroot}//home/scponly_test_chroot" }
-  its('shell') { should cmp '/usr/sbin/scponlyc' }
-  its('group') { should cmp 'scponly_test_chroot' }
-end
+accounts.each do |account|
+  scponly_test(account, "#{altroot}/home/#{account}")
 
-describe file '/var/lib/chroots/etc/passwd' do
-  its('content') { should match %r{^scponly_test_chroot:x:(1000|1001|1002):(1000|1001|1002)::/home/scponly_test_chroot:/usr/sbin/scponlyc$} }
+  describe user(account) do
+    it { should exist }
+    # '//' is scponlyc's chroot-point delimiter; without it the account is
+    # chrooted into its own empty home and every transfer fails.
+    its('home') { should cmp "#{altroot}//home/#{account}" }
+    its('shell') { should cmp '/usr/sbin/scponlyc' }
+    its('group') { should cmp account }
+  end
+
+  # Every chrooted account needs its own line here, with a home that is absolute
+  # inside the jail. Only the first account used to land.
+  describe file "#{altroot}/etc/passwd" do
+    its('content') { should match %r{^#{account}:x:\d+:\d+::/home/#{account}:/usr/sbin/scponlyc$} }
+  end
 end
 
 %w(bin etc lib64 usr).each do |d|

@@ -44,8 +44,12 @@ shared_examples 'scponly_user' do |user, home|
     )
   end
 
+  # Matched by resource name, not by 'scponly': a jail holds one of these per
+  # account, so the group_name alone is ambiguous.
   it do
-    expect(chef_run).to modify_group('scponly').with(
+    expect(chef_run).to modify_group("scponly append #{user}").with(
+      group_name: 'scponly',
+      append: true,
       members: [ user ]
     )
   end

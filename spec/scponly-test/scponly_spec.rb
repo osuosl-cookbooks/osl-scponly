@@ -32,6 +32,22 @@ describe 'scponly-test::scponly' do
           shell: '/usr/bin/scponly'
         )
       end
+
+      # A non-chrooted account has no jail, so nothing should touch a jail passwd.
+      it { expect(chef_run).to_not edit_append_if_no_line('Add scponly_test to /home/etc/passwd') }
+
+      it do
+        expect(chef_run).to run_execute('fallocate -l 10m /tmp/testfile-scponly_test.img').with(
+          creates: '/tmp/testfile-scponly_test.img'
+        )
+      end
+
+      it do
+        expect(chef_run).to create_file('/tmp/testfile-scponly_test.img').with(
+          owner: 'scponly_test',
+          group: 'scponly_test'
+        )
+      end
     end
   end
 end

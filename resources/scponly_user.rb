@@ -1,6 +1,3 @@
-# true To learn more about Custom Resources, see https://docs.chef.io/custom_resources.html
-
-resource_name :scponly_user
 provides :scponly_user
 unified_mode true
 
@@ -31,99 +28,84 @@ property :binaries,
 action :create do
   run_context.include_recipe 'osl-scponly::default'
 
-  group new_resource.name
+  account = new_resource.name
+  # Empty for a non-chrooted account, so every path below is written once.
+  altroot = new_resource.chroot ? new_resource.altroot : ''
+  home_dir = "#{altroot}/home/#{account}"
+  # scponlyc splits the passwd home on '//' to find the chroot point: it chroots
+  # to what precedes it and chdirs to what follows. Collapsing it chroots the
+  # account into its own empty home, where none of the jail's binaries exist.
+  passwd_home = new_resource.chroot ? "#{altroot}//home/#{account}" : home_dir
+
+  group account
 
   if new_resource.chroot
-
-    altroot = new_resource.altroot
-
     directory "#{altroot}/home" do
       group 'scponly'
       recursive true
     end
+  end
 
-    user new_resource.name do
-      gid new_resource.name
-      manage_home true
-      home "#{altroot}//home/#{new_resource.name}"
-      shell '/usr/sbin/scponlyc'
-    end
+  user account do
+    gid account
+    home passwd_home
+    manage_home true
+    shell new_resource.chroot ? '/usr/sbin/scponlyc' : '/usr/bin/scponly'
+  end
 
-    group "scponly append #{new_resource.name}" do
-      group_name 'scponly'
-      append true
-      members new_resource.name
-      action :modify
-    end
+  group "scponly append #{account}" do
+    group_name 'scponly'
+    append true
+    members account
+    action :modify
+  end
 
-    directory "#{altroot}/home/#{new_resource.name}/#{new_resource.write_dir}" do
-      owner 'root'
-      group 'scponly'
-      mode '0770'
-      recursive true
-    end
+  directory "#{home_dir}/#{new_resource.write_dir}" do
+    owner 'root'
+    group 'scponly'
+    mode '0770'
+    recursive true
+  end
 
+  if new_resource.chroot
     execute 'Build chroot jail' do
       command "/usr/libexec/scponly-chroot.sh #{altroot} #{new_resource.binaries.join(' ')}"
       creates "#{altroot}/bin"
     end
 
     directory "#{altroot}/etc"
+
     %w(ld.so.cache ld.so.conf group).each do |c|
       remote_file "#{altroot}/etc/#{c}" do
         source "file:///etc/#{c}"
       end
     end
 
-    execute "grep #{new_resource.name} /etc/passwd > #{altroot}/etc/passwd" do
-      creates "#{altroot}/etc/passwd"
-    end
-
-    filter_lines "#{altroot}/etc/passwd" do
-      filters(substitute: [/#{altroot}/, %r{#{altroot}/}, ''])
+    # One line per account: a redirect left all but the first account out.
+    # Lazy because the helper reads what the user resource above just wrote.
+    append_if_no_line "Add #{account} to #{altroot}/etc/passwd" do
+      path "#{altroot}/etc/passwd"
+      line lazy { osl_scponly_jail_passwd_line(altroot, account) }
       sensitive false
     end
-
-  else
-    altroot = ''
-    user new_resource.name do
-      gid new_resource.name
-      home "/home/#{new_resource.name}"
-      manage_home true
-      shell '/usr/bin/scponly'
-    end
-
-    group "scponly append #{new_resource.name}" do
-      group_name 'scponly'
-      append true
-      members new_resource.name
-      action :modify
-    end
-
-    directory "/home/#{new_resource.name}/#{new_resource.write_dir}" do
-      owner 'root'
-      group 'scponly'
-      mode '0770'
-      recursive true
-    end
   end
 
-  directory "#{altroot}/home/#{new_resource.name}" do
+  directory home_dir do
     mode '0550'
     owner 'root'
-    group new_resource.name
+    group account
   end
 
-  directory "#{altroot}/home/#{new_resource.name}/.ssh" do
+  directory "#{home_dir}/.ssh" do
     mode '0550'
-    owner new_resource.name
-    group new_resource.name
+    owner account
+    group account
   end
 
-  file "#{altroot}/home/#{new_resource.name}/.ssh/authorized_keys" do
+  file "#{home_dir}/.ssh/authorized_keys" do
     content new_resource.public_key
     mode '0400'
-    owner new_resource.name
-    group new_resource.name
+    owner account
+    group account
   end
 end
