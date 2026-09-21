@@ -26,10 +26,6 @@ enables both repos, so which one supplies it is transparent to callers.
 - osl-repos
 - yum-osuosl
 
-`metadata.rb` also declares `osl-selinux`, but nothing in the cookbook itself uses
-it; the only consumer is the test fixture, which labels the private key it drops
-inside the jail.
-
 ## Attributes
 
 None; everything is driven through resource properties.
@@ -75,6 +71,24 @@ Default `binaries`: `/bin/chgrp`, `/bin/chmod`, `/bin/chown`, `/bin/ln`,
 `/bin/ls`, `/bin/mkdir`, `/bin/mv`, `/bin/rm`, `/bin/rmdir`, `/bin/scp`,
 `/usr/libexec/openssh/sftp-server`, `/usr/sbin/scponlyc`.
 
+#### The `//` in a chrooted account's home is load-bearing
+
+A chrooted account's entry in the host's `/etc/passwd` looks like this:
+
+```text
+projectfoo:x:1001:1001::/var/lib/chroots//home/projectfoo:/usr/sbin/scponlyc
+```
+
+`scponlyc` splits that home on the **double slash** to find the chroot point: it
+chroots to everything before it and `chdir`s to everything after. Collapsing it
+to a single slash chroots the account into its own empty home directory, where
+none of the jail's binaries exist, and every transfer dies with
+`scp: Connection closed` and `sftp-server ... No such file or directory` in
+`/var/log/secure`. See `/usr/share/doc/scponly/BUILDING-JAILS.TXT`.
+
+The jail's own `/etc/passwd` is the opposite: the `altroot` prefix is stripped,
+so the home reads `/home/projectfoo`, which is correct *inside* the jail.
+
 #### The jail is built once
 
 Every chrooted account on a node shares one `altroot`. The jail is populated by
@@ -92,12 +106,10 @@ or remove `#{altroot}/bin` and converge to rebuild the whole jail.
 The jail also receives copies of the host's `/etc/ld.so.cache`,
 `/etc/ld.so.conf` and `/etc/group`, refreshed on every converge.
 
-Its `/etc/passwd` is written the same `creates`-guarded way, and because the
-command redirects rather than appends, **the jail's `/etc/passwd` ends up holding
-only the first chrooted account converged on that node**. A second
-`scponly_user` with `chroot true` will have a working jail but no passwd entry
-inside it. Until that is fixed, append the line by hand when a node needs more
-than one chrooted account.
+Its `/etc/passwd` gets one line per chrooted account, appended as each account
+converges, with the `altroot` prefix stripped from the home field so it resolves
+inside the jail. Any number of chrooted accounts can therefore share one
+`altroot`.
 
 ## Recipes
 
@@ -117,7 +129,7 @@ than one chrooted account.
 |---|---|
 | `default` | the `default` recipe on its own — package, `/etc/shells` entries, the `scponly` group |
 | `scponly` | a non-chrooted account, end to end |
-| `scponly-chroot` | the same round trip for a chrooted account, plus the jail's contents and its `/etc/passwd` |
+| `scponly-chroot` | the same round trip for *two* chrooted accounts sharing one jail, plus the jail's contents and both of its `/etc/passwd` entries |
 
 Both account suites share the round trip in
 `test/integration/helpers/inspec/helpers_spec.rb`, which is the part that proves
